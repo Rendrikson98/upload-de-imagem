@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import api from './services/api';
-import axios from 'axios';
 
 export default function FileUpload(){
     useEffect(()=>{
@@ -11,27 +10,22 @@ export default function FileUpload(){
       
         const [file, setFile] = useState('');
 
-        const data = {
-            name: 'image',
-            file: file,
-        }
+        var fn = new FormData();
+        fn.append('file', file[0]);
       
-        async function handlePost(){
-            console.log(file[0])
-          /*const response = await api.post('/nova-imagem', file)
-          console.log(response)
-          */axios.post("http://localhost:3333/nova-imagem", file[0], {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }  
-           }).then(res => {
+        function handlePost(){
+          api.post("nova-imagem", fn,{
+            headers: {
+              'Accept': 'application/json',
+          }
+          }).then(res => {
                   console.log(res)
               })
-          alert(file[0])
+          alert(fn)
         }
     return(
         
-        <form>
+        <form encType='multipart/form-data'>
           <input type="file" name="image" onChange={e=>setFile(e.target.files)}/>
 
           <button type="submit" onClick={()=>handlePost()}> Enviar </button>
